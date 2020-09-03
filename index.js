@@ -1,4 +1,5 @@
 const express = require('express') //express as a function 
+var morgan = require('morgan') //morgan middleware as function
 const { request, response } = require('express')
 const app = express() //calling express 
 
@@ -25,8 +26,16 @@ let persons = [
     }
 ]
 
+//Middleware to be used
 // HTTP POST request - JSON parser from express
 app.use(express.json())
+app.use(
+    morgan(':method :url :status :res[content-length] - :response-time ms :content') //Modified version of morgan's tiny format string, with custom tokens
+)
+morgan.token('content', request => JSON.stringify(request.body))
+// morgan.token('host', function(req, res) {
+//     return req.hostname;
+// })
 
 //Test route
 app.get('/', (request, response) => {
