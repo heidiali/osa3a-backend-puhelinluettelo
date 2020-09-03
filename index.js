@@ -1,6 +1,6 @@
-const express = require('express') //express funktiona
+const express = require('express') //express as a function 
 const { request, response } = require('express')
-const app = express() //kutsutaan express app muuttujaan olioksi
+const app = express() //calling express 
 
 let persons = [
     {
@@ -65,12 +65,23 @@ const generateId = () => {
 //HTTP POST, body 
 app.post('/api/persons', (request, response) => {
     const body = request.body
-
-    console.log('body: ', body)
+    const name = body.name
+    const nameExists = persons.find(person => person.name === name)
 
     if (!body.name) {
         return response.status(400).json({
-            error: 'content missing'
+            error: 'name missing'
+        })
+    }
+    if (!body.number) {
+        return response.status(400).json({
+            error: 'number missing'
+        })
+    }
+    //HOX! run POST test twice to test for dublicates, since it won't remember new things. Or use Arto Hellas
+    if (nameExists) {
+        return response.status(400).json({
+            error: 'name must be unique'
         })
     }
 
