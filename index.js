@@ -51,11 +51,18 @@ app.get('/api/persons/:id', (request, response) => {
     if (person) {
         response.json(person)
     } else {
-        response.status(404).end() //status & end = vastaa ilman dataa 
+        response.status(404).end() //status & end => respond without data
     }
 
     //console.log(note)
     response.json(note)
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    persons = persons.filter(person => person.id !== id)
+
+    response.status(204).end() //status 204 or 404 for a deleted instance
 })
 
 //Define port and listen to it
