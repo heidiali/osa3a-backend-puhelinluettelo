@@ -30,9 +30,12 @@ let persons = [
 // HTTP POST request - JSON parser from express
 app.use(express.json())
 app.use(
-    morgan(':method :url :status :res[content-length] - :response-time ms :content') //Modified version of morgan's tiny format string, with custom tokens
+    morgan(':method :url :status :res[content-length] - :response-time ms, content :content') //Modified version of morgan's tiny format string, with custom tokens
 )
-morgan.token('content', request => JSON.stringify(request.body))
+//content from http POST: 
+morgan.token('content', function(request, response) {
+    return JSON.stringify(request.body)
+})
 // morgan.token('host', function(req, res) {
 //     return req.hostname;
 // })
