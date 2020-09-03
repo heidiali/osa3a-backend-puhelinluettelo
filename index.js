@@ -5,27 +5,27 @@ const app = express() //kutsutaan express app muuttujaan olioksi
 let persons = [
     {
         name: "Arto Hellas",
-        date: "040-123456",
+        number: "040-123456",
         id: 1
     },
     {
         name: "Ada Lovelace",
-        date: "39-44-5323523",
+        number: "39-44-5323523",
         id: 4
     },
     {
         name: "Dan Abramow",
-        date: "12-43-234345",
+        number: "12-43-234345",
         id: 3
     },
     {
         name: "Mary Poppendieck",
-        date: "39-23-6423122",
+        number: "39-23-6423122",
         id: 5
     }
 ]
 
-// HTTP POST pyyntöä varten alustettava express:in JSON parseri
+// HTTP POST request - JSON parser from express
 app.use(express.json())
 
 //Test route
@@ -56,6 +56,33 @@ app.get('/api/persons/:id', (request, response) => {
 
     //console.log(note)
     response.json(note)
+})
+
+const generateId = () => {
+    return Math.floor(Math.random() * 10000) //returns random int from 0 to 9 999
+}
+
+//HTTP POST, body 
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    console.log('body: ', body)
+
+    if (!body.name) {
+        return response.status(400).json({
+            error: 'content missing'
+        })
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId(),
+    }
+
+    persons = persons.concat(person)
+
+    response.json(person)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
