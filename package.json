@@ -1,0 +1,19 @@
+{
+  "name": "osa3a-backend-puhelinluettelo",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heidiali/osa3a-backend-puhelinluettelo.git"
+  },
+  "author": "Heidi Ali-Kippari",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/heidiali/osa3a-backend-puhelinluettelo/issues"
+  },
+  "homepage": "https://github.com/heidiali/osa3a-backend-puhelinluettelo#readme"
+}
