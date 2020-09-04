@@ -1,3 +1,4 @@
+const cors = require('cors') //cors middleware to allow cross-origin requests
 const express = require('express') //express as a function 
 var morgan = require('morgan') //morgan middleware as function
 const { request, response } = require('express')
@@ -28,14 +29,15 @@ let persons = [
 
 //Middleware to be used
 // HTTP POST request - JSON parser from express
+app.use(cors()) //cors into use
 app.use(express.json())
 app.use(
     morgan(':method :url :status :res[content-length] - :response-time ms, content :content') //Modified version of morgan's tiny format string, with custom tokens
-)
-//content from http POST: 
-morgan.token('content', function(request, response) {
-    return JSON.stringify(request.body)
-})
+    )
+    //content from http POST: 
+    morgan.token('content', function(request, response) {
+        return JSON.stringify(request.body)
+    })
 // morgan.token('host', function(req, res) {
 //     return req.hostname;
 // })
