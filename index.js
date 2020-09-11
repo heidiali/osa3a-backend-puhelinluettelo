@@ -119,6 +119,7 @@ app.delete('/api/persons/:id', (request, response) => {
 
 //Define port and listen to it
 const PORT = process.env.PORT || 3001 // environment port (heroku configured) or localhost 3001
+console.log('PORT:', PORT)
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
