@@ -15,11 +15,16 @@ Requirement: nodemon version ^2.0.4
 
 The app in [heroku](https://phonebook-node-js.herokuapp.com/).
 
+Remember to install ignored node_modules
+`npm install`
+
+For running in development with nodemon listening
+`node_modules/.bin/nodemon index.js`
 
 ## Available Scripts
 In the project directory, you can run:
 
-` npm start `
+`npm start`
 Runs the app in the development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
