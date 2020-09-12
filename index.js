@@ -1,8 +1,8 @@
-const cors = require('cors') //cors middleware to allow cross-origin requests
 const express = require('express') //express as a function 
+const app = express() //calling express 
+const cors = require('cors') //cors middleware to allow cross-origin requests
 var morgan = require('morgan') //morgan middleware as function
 const { request, response } = require('express')
-const app = express() //calling express 
 
 let persons = [
     {
@@ -31,6 +31,7 @@ let persons = [
 // HTTP POST request - JSON parser from express
 app.use(cors()) //cors into use
 app.use(express.json())
+app.use(express.static('build')) //express middleware static, to show static content from build folder
 app.use(
     morgan(':method :url :status :res[content-length] - :response-time ms, content :content') //Modified version of morgan's tiny format string, with custom tokens
     )
