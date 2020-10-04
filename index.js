@@ -67,13 +67,7 @@ const generateId = () => {
 app.post('/api/persons', (request, response, next) => {
     const { name, number } = request.body;
     console.log('request.body', request.body)
-
     const person = new Person({ name, number });
-
-    //TODO: this crashes now. separate into separate put logic 
-    //const nameExists = Person.find(person => person.name === name)
-    //const nameExists = persons.find(person => person.name === name)
-    //console.log('nameExists: ', nameExists)
 
     if (!name) {
         return response.status(400).json({
@@ -85,18 +79,25 @@ app.post('/api/persons', (request, response, next) => {
             error: 'number missing'
         })
     }
-    //HOX! run POST test twice to test for dublicates, since it won't remember new things. Or use Arto Hellas
-    // if (nameExists) {
-    //     //TODO: Use put
-    //     return response.status(400).json({
-    //         error: 'name must be unique'
-    //     })
-    // }
 
     person.save()
         .then(newPerson => response.json(newPerson))
         .catch(next);
 })
+
+// Update existing person
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+        .then(updatedPerson => response.json(updatedPerson))
+        .catch(error => next(error))
+});
 
 app.delete('/api/persons/:id', (request, response, next) => {
     //Person.findByIdAndDelete(request.params.id)
