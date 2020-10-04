@@ -35,14 +35,14 @@ app.get('/info', (request, response, next) => {
             <p>${time}</p>
         `);
         })
-        .catch(next);
+        .catch(error => next(error))
 })
 
 //Get all persons (people)
 app.get('/api/persons', (request, response, next) => {
     Person.find()
         .then(persons => response.json(persons))
-        .catch(next);//TODO: Why does this still throw an error?
+        .catch(next);
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -106,14 +106,14 @@ app.delete('/api/persons/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-// Middleware to handle unknown endpoints - correct positioning?
+// Middleware to handle unknown endpoints
 const unknownEndpoint = (request, response) => {
     response.status(404).json({ error: 'Unknown endpoint' });
 };
 
 app.use(unknownEndpoint);
 
-// Middleware to handle errors - correct positioning?
+// Middleware to handle errors
 const errorHandler = (error, request, response, next) => {
     console.log(error.message);
 
