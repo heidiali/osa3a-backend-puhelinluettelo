@@ -9,6 +9,7 @@ Requirements:
 cors v ^2.8.5
 express ^4.17.1
 morgan ^1.10.0
+mongoose ^5.10.7
 
 Uses Nodemon for listening for changes in dev code.
 Requirement: nodemon version ^2.0.4
