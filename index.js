@@ -9,9 +9,9 @@ const { request, response } = require('express')
 
 //Middleware to be used
 // HTTP POST request - JSON parser from express
-app.use(cors()) //cors into use
-app.use(express.json())
 app.use(express.static('build')) //express middleware static, to show static content from build folder
+app.use(express.json())
+app.use(cors()) //cors into use
 app.use(
     morgan(':method :url :status :res[content-length] - :response-time ms, content :content') //Modified version of morgan's tiny format string, with custom tokens
 )
@@ -41,22 +41,27 @@ app.get('/info', (request, response) => {
 app.get('/api/persons', (request, response) => {
     Person.find()
         .then(persons => response.json(persons))
-        .catch(console.log('Error occurred in api/persons'));
+        .catch(console.log('Error occurred in api/persons')); //TODO: Why does this still throw an error?
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     const id = Number(request.params.id)
 
-    Person.findById(id)
+    Person.findById(request.params.id)
         .then(person => {
-
             if (person) {
                 response.json(person)
             } else {
                 response.status(404).end() //status & end => respond without data
             }
         })
-        .catch(console.log('Person does not exist.'));
+        // .catch(error => {
+        //     console.log(error)
+        //     // response.status(500).end()
+        //     response.status(400).send({ error: 'malformatted id' })
+        //   })
+        .catch(error => next(error))
+
 })
 
 const generateId = () => {
@@ -99,7 +104,6 @@ app.post('/api/persons', (request, response) => {
 
 })
 
-//TODO: Check that it works 
 app.delete('/api/persons/:id', (request, response) => {
     Person.findByIdAndDelete(request.params.id)
         .then(() => response.status(204).end())
