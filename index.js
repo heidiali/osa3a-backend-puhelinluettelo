@@ -26,7 +26,7 @@ app.get('/', (request, response) => {
 })
 
 //Info route - how many persons?
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
     const time = new Date()
     Person.find()
         .then(persons => {
@@ -35,13 +35,14 @@ app.get('/info', (request, response) => {
             <p>${time}</p>
         `);
         })
-        .catch(console.log('Error in fetching info. '));
+        .catch(next);
 })
 
-app.get('/api/persons', (request, response) => {
+//Get all persons (people)
+app.get('/api/persons', (request, response, next) => {
     Person.find()
         .then(persons => response.json(persons))
-        .catch(console.log('Error occurred in api/persons')); //TODO: Why does this still throw an error?
+        .catch(next);//TODO: Why does this still throw an error?
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -55,13 +56,7 @@ app.get('/api/persons/:id', (request, response, next) => {
                 response.status(404).end() //status & end => respond without data
             }
         })
-        // .catch(error => {
-        //     console.log(error)
-        //     // response.status(500).end()
-        //     response.status(400).send({ error: 'malformatted id' })
-        //   })
         .catch(error => next(error))
-
 })
 
 const generateId = () => {
@@ -69,7 +64,7 @@ const generateId = () => {
 }
 
 //Add new person
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const { name, number } = request.body;
     console.log('request.body', request.body)
 
@@ -100,15 +95,35 @@ app.post('/api/persons', (request, response) => {
 
     person.save()
         .then(newPerson => response.json(newPerson))
-        .catch(console.log('Error creating a new person. '));
-
+        .catch(next);
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-    Person.findByIdAndDelete(request.params.id)
+app.delete('/api/persons/:id', (request, response, next) => {
+    //Person.findByIdAndDelete(request.params.id)
+    Person.findByIdAndRemove(request.params.id)
         .then(() => response.status(204).end())
-        .catch(console.log('Error in deleting person information. '));
+        .catch(error => next(error))
 })
+
+// Middleware to handle unknown endpoints - correct positioning?
+const unknownEndpoint = (request, response) => {
+    response.status(404).json({ error: 'Unknown endpoint' });
+};
+
+app.use(unknownEndpoint);
+
+// Middleware to handle errors - correct positioning?
+const errorHandler = (error, request, response, next) => {
+    console.log(error.message);
+
+    if (error.name === 'CastError' && error.kind === 'ObjectId') {
+        return response.status(400).json({ error: 'malformatted id' });
+    }
+
+    next(error);
+};
+
+app.use(errorHandler);
 
 //Define port and listen to it
 //const PORT = process.env.PORT
